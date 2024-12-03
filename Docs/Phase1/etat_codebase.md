@@ -112,6 +112,21 @@
       routes/
       views/
     ```
+  - Pour voir une architecture encore plus global pour le projet :
+    ```
+    src/
+      Front/
+        views/
+      Back/
+        controllers/
+        models/
+        routes/
+        middlewares/
+      Docs/
+        Phase1/
+        Phase2/
+        Phase3/
+    ```
 
 ## Conclusion
 La codebase est bien structurée dans l'ensemble, mais souffre de problèmes liés à la sécurité, au manque de tests, et à une architecture perfectible. En priorisant la sécurisation des requêtes SQL, la modularisation des contrôleurs, et l'ajout de tests unitaires, l'application gagnerait en robustesse, maintenabilité, et sécurité.
