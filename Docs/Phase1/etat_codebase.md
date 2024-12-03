@@ -23,7 +23,7 @@
   - L'application manque de tests unitaires et fonctionnels pour valider le bon fonctionnement des fonctionnalités critiques comme l'authentification, la création de tâches ou la gestion des permissions.
 
 - **Impact :**
-  - L'absence de tests expose le projet à des régressions lors de futures modifications ou ajouts de fonctionnalités.
+  - L'absence de tests expose le projet à des erreurs lors de futures modifications ou ajouts de fonctionnalités.
 
 ## 4. Pistes d'Amélioration
 - **Sécurisation :**
