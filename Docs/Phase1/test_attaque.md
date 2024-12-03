@@ -130,7 +130,6 @@
          next();
      };
 
-     // Protéger la page admin
      app.use('/admin', authorize(['ROLE_ADMIN']));
      ```
 
@@ -138,11 +137,10 @@
    - Par exemple, pour les tâches, vérifiez si l'utilisateur connecté est bien le propriétaire des tâches demandées :
      ```javascript
      router.get('/tasks', (req, res) => {
-         const userId = req.user.id; // ID de l'utilisateur connecté
+         const userId = req.user.id;
          if (req.query.userId !== userId.toString()) {
              return res.status(403).send('Access Denied');
          }
-         // Continuer avec la récupération des tâches
      });
      ```
 

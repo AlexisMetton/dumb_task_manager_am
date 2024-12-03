@@ -4,6 +4,7 @@
 - **Lisibilité :**
   - Le code est généralement lisible, mais manque de commentaires explicatifs pour clarifier certaines parties critiques, comme les requêtes SQL et les routes sensibles.
   - Certaines fonctions comme `Task.create` et `User.findById` utilisent des pratiques non sécurisées (concatenation directe dans les requêtes SQL), rendant le code vulnérable.
+  - Les mots de passe ne sont pas hachés donc en cas d'attaque avec injection SQL les attaquants peuvent récupérer les mots de passe des utilisateurs en clair et donc les réutiliser.
 
 - **Maintenabilité :**
   - Les fichiers sont bien séparés par responsabilité (`app.js`, `auth.js`, `tasks.js`, etc.), ce qui facilite la compréhension générale.
@@ -45,6 +46,38 @@
      };
      ```
 
+  3. Ajouter un hachache des mots de passe
+    - En effet, lors de la création d'un utilisateur nous devons hacher le mot de passe avant l'inscription dans la base de données. Voici un exemple de code fonctionnel même si dans les faits il y aura d'autres éléments à rajouter comme la vérification des champs et la mise en place d'une politique de username et email unique.
+     ```javascript
+      const bcrypt = require('bcrypt');
+      create: (user, callback) => {
+        bcrypt.hash(user.password, 10, (err, hashedPassword) => {
+        const query = 'INSERT INTO users (username, password, email) VALUES (?, ?, ?)';
+          const params = [user.username, hashedPassword, user.email];
+          db.run(query, params, function (err) {
+              callback(null, { id: this.lastID, ...user });
+          });
+        });
+      },
+     ```
+     - Il faudra aussi modifier le code "authenticate" pour que le comparatifs des mots de passe se fasse entre password hachés. Voici un exemple de code fonctionnel même si dans les faits il y aura peut être d'autres éléments à rajouter.
+    ```javascript
+      const authenticate = (username, password, callback) => {
+        User.findByUsername(username, (err, user) => {
+            if (err || !user) return callback(null, false);
+
+            bcrypt.compare(password, user.password, (err, isMatch) => {
+                if (err) return callback(err, false);
+                if (isMatch) {
+                    user.connected = true;
+                    return callback(null, user);
+                } else {
+                    return callback(null, false);
+                }
+            });
+        });
+      };
+    ```
 - **Refactorisation :**
   1. Extraire la logique métier des routes (`auth.js`, `tasks.js`) dans des contrôleurs dédiés pour améliorer la lisibilité et la maintenabilité.
       - Par exemple, une route comme celle-ci :
