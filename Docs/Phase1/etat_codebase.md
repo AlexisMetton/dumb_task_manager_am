@@ -118,6 +118,7 @@
       Front/
         views/
       Back/
+        config/
         controllers/
         models/
         routes/
